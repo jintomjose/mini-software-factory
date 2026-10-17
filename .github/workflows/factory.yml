@@ -1,0 +1,9 @@
+name: factory
+on: [pull_request]
+jobs:
+  chain:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check the artifact chain
+        run: python3 factory/check_chain.py

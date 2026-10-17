@@ -1,0 +1,27 @@
+# bands.yaml: how far an agent may act on a production signal without a human.
+# Leave this until everything else works. It is the furthest from normal practice.
+
+signals:
+  - name: error_rate
+    source: <your error tracker / logs>
+    baseline: <normal value, e.g. 0.5% of requests>
+    bands:
+      1sigma: log_only            # write it down, nothing else
+      2sigma: diagnose_read_only  # agent investigates, writes findings, changes nothing
+      3sigma: propose_pr          # agent opens a PR or runs an approved runbook; a human merges
+    never:
+      - change production data
+      - change production config directly
+      - merge its own PR
+
+  - name: activation_rate
+    source: <product analytics>
+    baseline: <e.g. 40% of sign-ups check in within 48h>
+    bands:
+      1sigma: log_only
+      2sigma: diagnose_read_only
+      3sigma: write_intent        # agent drafts a new intent.md for a human to review
+
+escalation:
+  owner: <name>
+  channel: <where alerts go>
